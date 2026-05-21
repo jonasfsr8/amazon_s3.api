@@ -1,0 +1,6 @@
+@amzns3.host_HostAddress = http://localhost:5278
+
+GET {{amzns3.host_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
