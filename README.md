@@ -1,21 +1,20 @@
-# AWS S3 Integration API
+# API de integração do AWS S3
 
-Web API built with ASP.NET Core integrating AWS S3 for bucket management and file operations.
+Web API desenvolvida com ASP.NET Core, integrando o AWS para gerenciamento de buckets e operações com arquivos.
 
 ---
 
 ## 🚀 Features
 
-- List S3 buckets
-- Upload files to S3
-- Download files from S3
-- Delete files from S3
-- AWS CLI configuration
-- AWS SDK integration for .NET
+- Lista S3 buckets
+- Upload de arquivos para S3
+- Download de arquivos do S3
+- Configuração AWS CLI
+- Integração do SDK da AWS para .NET
 
 ---
 
-## 🛠 Technologies
+## 🛠 Tecnologias
 
 - ASP.NET Core Web API
 - AWS S3
@@ -25,13 +24,13 @@ Web API built with ASP.NET Core integrating AWS S3 for bucket management and fil
 
 ---
 
-# 📦 Installing AWS CLI
+# 📦 Instalando AWS CLI
 
-Download and install AWS CLI from the official website:
+Baixe e instale a AWS CLI a partir do site oficial:
 
 https://docs.aws.amazon.com/pt_br/cli/latest/userguide/getting-started-install.html
 
-After installation, verify:
+Após a instalação, verifique:
 
 ```bash
 aws --version
@@ -45,20 +44,20 @@ aws-cli/2.x.x Python/3.x Windows/10 exe/AMD64
 
 ---
 
-# 🔐 Configuring AWS Credentials
+# 🔐 Configurando as credenciais da AWS
 
-Create an IAM user in AWS with S3 permissions and generate:
+Crie um usuário IAM na AWS com permissões para o S3 e gere:
 
-- Access Key ID
-- Secret Access Key
+- ID da chave de acesso
+- Chave de acesso secreta
 
-Configure AWS CLI:
+Configure a AWS CLI:
 
 ```bash
 aws configure
 ```
 
-Fill the fields:
+Preencha os campos:
 
 ```bash
 AWS Access Key ID [None]: YOUR_ACCESS_KEY
@@ -67,13 +66,13 @@ Default region name [None]: us-east-1
 Default output format [None]: json
 ```
 
-Verify configuration:
+Verifique a configuração:
 
 ```bash
 aws configure list
 ```
 
-You can also test access:
+Você também pode testar o acesso:
 
 ```bash
 aws s3 ls
@@ -81,9 +80,9 @@ aws s3 ls
 
 ---
 
-# 📥 Installing AWS SDK for .NET
+# 📥 Instalando o AWS SDK para .NET
 
-Install the AWS S3 package:
+Instale o pacote AWS S3:
 
 ```bash
 dotnet add package AWSSDK.S3
@@ -95,27 +94,27 @@ https://www.nuget.org/packages/AWSSDK.S3/
 
 ---
 
-# ▶ Running the Project
+# ▶ Executando o Projeto
 
-Clone the repository:
+Clone o repository:
 
 ```bash
 git clone https://github.com/your-user/s3manager.api.git
 ```
 
-Access the folder:
+Acesse a pasta:
 
 ```bash
 cd s3manager.api
 ```
 
-Restore packages:
+Restaurar pacotes:
 
 ```bash
 dotnet restore
 ```
 
-Run the application:
+Execute o aplicativo:
 
 ```bash
 dotnet run
@@ -123,7 +122,7 @@ dotnet run
 
 ---
 
-# 📁 Suggested Project Structure
+# 📁 Estrutura de projeto sugerida
 
 ```bash
 src/
@@ -138,28 +137,9 @@ src/
 
 ---
 
-# 🔒 Security Notes
+# ☁ Documentação AWS
 
-Never commit:
-
-- `appsettings.json`
-- AWS credentials
-- Secret keys
-
-Example `.gitignore`:
-
-```gitignore
-appsettings.json
-.env
-bin/
-obj/
-```
-
----
-
-# ☁ AWS Documentation
-
-Official S3 documentation:
+Documentação oficial do S3:
 
 https://docs.aws.amazon.com/s3/
 
@@ -171,4 +151,4 @@ https://docs.aws.amazon.com/sdk-for-net/
 
 # 👨‍💻 Author
 
-Project created for learning purposes using AWS S3 with ASP.NET Core Web API.
+Project created only for learning purposes.

@@ -1,5 +1,8 @@
-﻿using amzns3.host.Interfaces;
+﻿using Amazon.S3.Model;
+using amzns3.host.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using tube_catcher.module.Common;
 
 namespace amzns3.host.Controllers
 {
@@ -7,10 +10,13 @@ namespace amzns3.host.Controllers
     [ApiController]
     public class BucketsController : ControllerBase
     {
-        [HttpGet("ListAll")]
-        public async Task<IActionResult> List([FromServices] IBucketServce bucketServce)
+        [HttpGet("list")]
+        public async Task<IActionResult> ListBuckets([FromServices] IStorageService bucketServce)
         {
-            return Ok(await bucketServce.ListAllBuckets());
+            var result = await bucketServce.ListBucketsAsync();
+
+            return StatusCode((int)HttpStatusCode.OK,
+                ApiResponse<List<S3Bucket>>.SuccessResponse(result, "Lista recuperada com sucesso."));
         }
     }
 }

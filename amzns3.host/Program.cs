@@ -1,6 +1,9 @@
 using Amazon.S3;
 using amzns3.host.Interfaces;
+using amzns3.host.Middlewares;
 using amzns3.host.Services;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +13,14 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// AWS S3
 builder.Services.TryAddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddAWSService<IAmazonS3>();
 
-builder.Services.AddScoped<IBucketServce, BucketService>();
+builder.Services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
+
+// Services
+builder.Services.AddScoped<IStorageService, StorageService>();
 
 var app = builder.Build();
 
@@ -25,6 +32,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 
