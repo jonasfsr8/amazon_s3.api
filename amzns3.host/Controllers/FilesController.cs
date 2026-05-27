@@ -1,5 +1,5 @@
-﻿using Amazon.S3.Model;
-using amzns3.host.DTOs;
+﻿using amzns3.host.DTOs.Requests;
+using amzns3.host.DTOs.Response;
 using amzns3.host.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -7,7 +7,7 @@ using tube_catcher.module.Common;
 
 namespace amzns3.host.Controllers
 {
-    [Route("[controller]")]
+    [Route("files")]
     [ApiController]
     public class FilesController : ControllerBase
     {
@@ -23,17 +23,16 @@ namespace amzns3.host.Controllers
         {
             var result = await _storageService.GetFileByKeyAsync(bucketName, key);
 
-            return StatusCode((int)HttpStatusCode.OK,
-                ApiResponse<GetObjectResponse>.SuccessResponse(result, "Recuperado com sucesso."));
+            return File(result.ResponseStream, result.Headers.ContentType, result.Key);
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetAllFilesAsync([FromQuery] ListFilesRequest request)
+        public async Task<IActionResult> GetAllFilesAsync([FromQuery] FileRequestDto request)
         {
             var result = await _storageService.ListFileAsync(request);
 
             return StatusCode((int)HttpStatusCode.OK,
-                ApiResponse<ListObjectsV2Response>.SuccessResponse(result, "Lista recuperada com sucesso."));
+                ApiResponse<List<S3ObjectsResponseDto>>.SuccessResponse(result, "Lista recuperada com sucesso."));
         }
 
         [HttpPost("upload")]
@@ -42,7 +41,7 @@ namespace amzns3.host.Controllers
             var result = await _storageService.UploadFileAsync(file, bucketName, prefix);
 
             return StatusCode((int)HttpStatusCode.OK, 
-                ApiResponse<PutObjectResponse>.SuccessResponse(result, "Upload realizado com sucesso."));
+                ApiResponse<object>.SuccessResponse(null, "Upload realizado com sucesso."));
         }
 
         [HttpDelete("delete/{bucketName}/{key}")]

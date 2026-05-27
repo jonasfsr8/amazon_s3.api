@@ -30,7 +30,7 @@ namespace amzns3.host.Middlewares
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "An unexpected error occurred.");
+                _logger.LogError(exception, exception.Message);
 
                 await HandleExceptionAsync(context, exception);
             }
@@ -41,7 +41,7 @@ namespace amzns3.host.Middlewares
             if (context.Response.HasStarted)
             {
                 _logger.LogWarning(
-                    "The response has already started, the exception middleware will not execute.");
+                    "A resposta já foi iniciada; o middleware de exceção não será executado.");
 
                 return;
             }
@@ -70,9 +70,9 @@ namespace amzns3.host.Middlewares
 
             var message = context.Response.StatusCode switch
             {
-                StatusCodes.Status401Unauthorized => "Unauthorized.",
-                StatusCodes.Status403Forbidden => "Forbidden.",
-                _ => "An unexpected error occurred."
+                StatusCodes.Status401Unauthorized => "Não autorizado.",
+                StatusCodes.Status403Forbidden => "Proibido.",
+                _ => "Ocorreu um erro inesperado."
             };
 
             var response = ApiResponse<object>.ErrorResponse(message);
@@ -111,7 +111,7 @@ namespace amzns3.host.Middlewares
 
             InvalidOperationException => exception.Message,
 
-            _ => "An unexpected error occurred."
+            _ => exception.Message
         };
     }
 }

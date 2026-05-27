@@ -2,7 +2,6 @@ using Amazon.S3;
 using amzns3.host.Interfaces;
 using amzns3.host.Middlewares;
 using amzns3.host.Services;
-using Microsoft.AspNetCore.Diagnostics;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

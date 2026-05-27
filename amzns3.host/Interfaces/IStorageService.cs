@@ -1,15 +1,15 @@
 ﻿using Amazon.S3.Model;
-using amzns3.host.DTOs;
+using amzns3.host.DTOs.Requests;
+using amzns3.host.DTOs.Response;
 
 namespace amzns3.host.Interfaces
 {
     public interface IStorageService
     {
         Task<GetObjectResponse> GetFileByKeyAsync(string bucketName, string key);
-        Task<ListObjectsV2Response> ListFileAsync(ListFilesRequest request);
-        Task<List<S3Bucket>> ListBucketsAsync();
-        Task<PutObjectResponse> UploadFileAsync(IFormFile file, string bucketName, string? prefix);
+        Task<List<S3ObjectsResponseDto>> ListFileAsync(FileRequestDto request);
+        Task<List<BucketsS3ListResponseDto>> ListBucketsAsync();
+        Task<PutObjectResponse> UploadFileAsync(IFormFile file, string bucketName, string prefix);
         Task DeleteFileAsync(string bucketName, string key);
-        
     }
 }

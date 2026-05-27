@@ -1,30 +1,31 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
-using amzns3.host.DTOs;
+using amzns3.host.DTOs.Requests;
+using amzns3.host.DTOs.Response;
 using amzns3.host.Exceptions;
 using amzns3.host.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace amzns3.host.Services
 {
     public class StorageService : IStorageService
     {
         private readonly IAmazonS3 _s3Client;
+        private readonly IMapper _mapper;
 
-        public StorageService(IAmazonS3 amazonS3)
+        public StorageService(IAmazonS3 amazonS3, IMapper mapper)
         {
             _s3Client = amazonS3;
+            _mapper = mapper;
         }
 
-        #region buckets
-        public async Task<List<S3Bucket>> ListBucketsAsync()
+        public async Task<List<BucketsS3ListResponseDto>> ListBucketsAsync()
         {
             ListBucketsResponse response = await _s3Client.ListBucketsAsync();
-            return response.Buckets;
-        }
-        #endregion
 
-        #region files
+            return _mapper.Map<List<BucketsS3ListResponseDto>>(response.Buckets);
+        }
+
         public async Task<GetObjectResponse> GetFileByKeyAsync(string bucketName, string key)
         {
             await BucketExists(_s3Client, bucketName);
@@ -32,31 +33,30 @@ namespace amzns3.host.Services
             return await _s3Client.GetObjectAsync(bucketName, key);
         }
 
-        public async Task<ListObjectsV2Response> ListFileAsync(ListFilesRequest request)
+        public async Task<List<S3ObjectsResponseDto>> ListFileAsync(FileRequestDto request)
         {
             await BucketExists(_s3Client, request.BucketName);
 
-            var obj = new ListObjectsV2Request()
-            {
-                BucketName = request.BucketName,
-                Prefix = request.Prefix
-            };
+            var objv2 = _mapper.Map<ListObjectsV2Request>(request);
 
-            return await _s3Client.ListObjectsV2Async(obj);
+            var response = await _s3Client.ListObjectsV2Async(objv2);
+
+            return _mapper.Map<List<S3ObjectsResponseDto>>(response.S3Objects);
         }
 
         public async Task<PutObjectResponse> UploadFileAsync(IFormFile file, string bucketName, string? prefix)
         {
             await BucketExists(_s3Client, bucketName);
 
-            var request = new PutObjectRequest()
-            {
-                BucketName = bucketName,
-                Key = string.IsNullOrEmpty(prefix) ? file.FileName : $"{prefix.TrimEnd('/')}/{file.FileName}",
-                InputStream = file.OpenReadStream()
+            var request = new PutObjectRequest() 
+            { 
+                BucketName = bucketName, 
+                Key = string.IsNullOrEmpty(prefix) ? file.FileName : $"{prefix.TrimEnd('/')}/{file.FileName}", 
+                InputStream = file.OpenReadStream() 
             };
 
             request.Metadata.Add("Content-Type", file.ContentType);
+
             return await _s3Client.PutObjectAsync(request);
         }
 
@@ -66,7 +66,6 @@ namespace amzns3.host.Services
 
             await _s3Client.DeleteObjectAsync(bucketName, key);
         }
-        #endregion 
 
         private async Task BucketExists(IAmazonS3 s3Client, string bucketName)
         {
@@ -74,8 +73,6 @@ namespace amzns3.host.Services
 
             if(!bucketExists)
                 throw new NotFoundException("Bucket não encontrado.");
-        }
-
-        
+        }        
     }
 }
